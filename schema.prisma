@@ -1,0 +1,48 @@
+datasource postgresql {
+  url      = env("DATABASE_URL")
+  provider = "postgresql"
+}
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "node_modules/.prisma/client"
+}
+
+model User {
+  id       Int      @id @default(autoincrement())
+  name     String?
+  email    String?  @unique
+  password String?
+  isAdmin  Boolean?
+  artwork  Item[]   @relation("Itemuser")
+  role     Role?    @relation("Userrole", fields: [roleId], references: [id])
+  roleId   Int?     @map("role")
+
+  @@index([roleId])
+}
+
+model Item {
+  id          Int     @id @default(autoincrement())
+  name        String? @unique
+  description String?
+  status      String?
+  stock       Int?
+  fieldName   String?
+  price       Int?
+  user        User?   @relation("Itemuser", fields: [userId], references: [id])
+  userId      Int?    @map("user")
+
+  @@index([userId])
+}
+
+model Role {
+  id                Int      @id @default(autoincrement())
+  name              String?
+  canManageProducts Boolean?
+  canSeeOtherUsers  Boolean?
+  canManageUsers    Boolean?
+  canManageRoles    Boolean?
+  canManageCart     Boolean?
+  canManageOrders   Boolean?
+  assignedTo        User[]   @relation("Userrole")
+}
