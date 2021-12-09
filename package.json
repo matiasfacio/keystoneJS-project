@@ -18,6 +18,6 @@
     "typescript": "^4.2.4"
   },
   "devDependencies": {
-    "immer": "^9.0.1"
+    "immer": "^9.0.7"
   }
 }
